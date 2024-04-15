@@ -35,7 +35,7 @@ percona57_ver=5.7.42-46
 percona56_ver=5.6.51-91.0
 percona55_ver=5.5.62-38.14
 
-pgsql_ver=12.7
+pgsql_ver=14.11
 
 mongodb_ver=4.0.26
 
@@ -127,4 +127,6 @@ luajit2_ver=2.1-20230410
 lua_resty_core_ver=0.1.27
 lua_resty_lrucache_ver=0.13
 lua_cjson_ver=2.1.0.12
-fail2ban_ver=master
+fail2ban_ver=1.0.2
+ngx_cache_purge_ver=2.3
+ngx_devel_kit_ver=0.3.3

@@ -10,7 +10,9 @@
 
 Install_fail2ban() {
   pushd ${oneinstack_dir}/src > /dev/null
-  src_url=${mirror_link}/oneinstack/src/fail2ban-${fail2ban_ver}.tar.gz && Download_src
+  #src_url=${mirror_link}/oneinstack/src/fail2ban-${fail2ban_ver}.tar.gz && Download_src
+  src_url=https://github.com/fail2ban/fail2ban/archive/refs/tags/${fail2ban_ver}.tar.gz && Download_src
+  mv ${fail2ban_ver}.tar.gz fail2ban-${fail2ban_ver}.tar.gz
   tar xzf fail2ban-${fail2ban_ver}.tar.gz
   pushd fail2ban-${fail2ban_ver} > /dev/null
   if command -v python3 > /dev/null 2>&1; then

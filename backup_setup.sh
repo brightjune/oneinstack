@@ -549,9 +549,11 @@ fi
 if [ -n "`echo ${desc_bk} | grep -w 8`" ]; then
   if [ ! -e "/usr/local/bin/dbxcli" ]; then
     if [ "${armplatform}" == 'y' ]; then
-      wget -qc ${mirror_link}/oneinstack/src/dbxcli-linux-arm -O /usr/local/bin/dbxcli
+      #wget -qc ${mirror_link}/oneinstack/src/dbxcli-linux-arm -O /usr/local/bin/dbxcli
+      cp src/dbxcli-linux-arm /usr/local/bin/dbxcli
     else
-      wget -qc ${mirror_link}/oneinstack/src/dbxcli-linux-amd64 -O /usr/local/bin/dbxcli
+      #wget -qc ${mirror_link}/oneinstack/src/dbxcli-linux-amd64 -O /usr/local/bin/dbxcli
+      cp src/dbxcli-linux-amd64 /usr/local/bin/dbxcli
     fi
     chmod +x /usr/local/bin/dbxcli
   fi

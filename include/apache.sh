@@ -128,43 +128,43 @@ EOF
   [ "${apache_mode_option}" != '2' ] && Apache_fcgi=$(echo -e "<Files ~ (\\.user.ini|\\.htaccess|\\.git|\\.svn|\\.project|LICENSE|README.md)\$>\n    Order allow,deny\n    Deny from all\n  </Files>\n  <FilesMatch \\.php\$>\n    SetHandler \"proxy:unix:/dev/shm/php-cgi.sock|fcgi://localhost\"\n  </FilesMatch>")
   cat > ${apache_install_dir}/conf/vhost/0.conf << EOF
 <VirtualHost *:$TMP_PORT>
-  ServerAdmin admin@example.com
-  DocumentRoot "${wwwroot_dir}/default"
-  ServerName 127.0.0.1
-  ErrorLog "${wwwlogs_dir}/error_apache.log"
-  CustomLog "${wwwlogs_dir}/access_apache.log" common
-  <Files ~ (\.user.ini|\.htaccess|\.git|\.svn|\.project|LICENSE|README.md)\$>
-    Order allow,deny
-    Deny from all
-  </Files>
-  ${Apache_fcgi}
-<Directory "${wwwroot_dir}/default">
-  SetOutputFilter DEFLATE
-  Options FollowSymLinks ExecCGI
-  Require all granted
-  AllowOverride All
-  Order allow,deny
-  Allow from all
-  DirectoryIndex index.html index.php
-</Directory>
-<Location /server-status>
-  SetHandler server-status
-  Order Deny,Allow
-  Deny from all
-  Allow from 127.0.0.1
-</Location>
+    ServerAdmin admin@example.com
+    DocumentRoot "${wwwroot_dir}/default"
+    ServerName 127.0.0.1
+    ErrorLog "${wwwlogs_dir}/error_apache.log"
+    CustomLog "${wwwlogs_dir}/access_apache.log" common
+    <Files ~ (\.user.ini|\.htaccess|\.git|\.svn|\.project|LICENSE|README.md)\$>
+        Order allow,deny
+        Deny from all
+    </Files>
+    ${Apache_fcgi}
+    <Directory "${wwwroot_dir}/default">
+        SetOutputFilter DEFLATE
+        Options FollowSymLinks ExecCGI
+        Require all granted
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+        DirectoryIndex index.html index.php
+    </Directory>
+    <Location /server-status>
+        SetHandler server-status
+        Order Deny,Allow
+        Deny from all
+        Allow from 127.0.0.1
+    </Location>
 </VirtualHost>
 EOF
 
   cat >> ${apache_install_dir}/conf/httpd.conf <<EOF
 <IfModule mod_headers.c>
-  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml text/javascript
-  <FilesMatch "\.(js|css|html|htm|png|jpg|swf|pdf|shtml|xml|flv|gif|ico|jpeg)\$">
-    RequestHeader edit "If-None-Match" "^(.*)-gzip(.*)\$" "\$1\$2"
-    Header edit "ETag" "^(.*)-gzip(.*)\$" "\$1\$2"
-  </FilesMatch>
-  DeflateCompressionLevel 6
-  SetOutputFilter DEFLATE
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml text/javascript
+    <FilesMatch "\.(js|css|html|htm|png|jpg|swf|pdf|shtml|xml|flv|gif|ico|jpeg)\$">
+        RequestHeader edit "If-None-Match" "^(.*)-gzip(.*)\$" "\$1\$2"
+        Header edit "ETag" "^(.*)-gzip(.*)\$" "\$1\$2"
+    </FilesMatch>
+    DeflateCompressionLevel 6
+    SetOutputFilter DEFLATE
 </IfModule>
 
 ProtocolsHonorOrder On

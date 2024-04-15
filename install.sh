@@ -29,10 +29,10 @@ pushd ${oneinstack_dir} > /dev/null
 . ./include/download.sh
 . ./include/get_char.sh
 
-dbrootpwd=`< /dev/urandom tr -dc A-Za-z0-9 | head -c8`
-dbpostgrespwd=`< /dev/urandom tr -dc A-Za-z0-9 | head -c8`
-dbmongopwd=`< /dev/urandom tr -dc A-Za-z0-9 | head -c8`
-xcachepwd=`< /dev/urandom tr -dc A-Za-z0-9 | head -c8`
+dbrootpwd=`< /dev/urandom tr -dc A-Za-z0-9 | head -c15`
+dbpostgrespwd=`< /dev/urandom tr -dc A-Za-z0-9 | head -c15`
+dbmongopwd=`< /dev/urandom tr -dc A-Za-z0-9 | head -c15`
+xcachepwd=`< /dev/urandom tr -dc A-Za-z0-9 | head -c15`
 dbinstallmethod=1
 
 version() {
@@ -565,8 +565,8 @@ if [ ${ARG_NUM} == 0 ]; then
           echo -e "\t${CMSG}12${CEND}. Install Percona-5.5"
           echo -e "\t${CMSG}13${CEND}. Install PostgreSQL"
           echo -e "\t${CMSG}14${CEND}. Install MongoDB"
-          read -e -p "Please input a number:(Default 2 press Enter) " db_option
-          db_option=${db_option:-2}
+          read -e -p "Please input a number:(Default 1 press Enter) " db_option
+          db_option=${db_option:-1}
           if [[ "${db_option}" =~ ^[1-9]$|^1[0-4]$ ]]; then
             if [ "${db_option}" == '13' ]; then
               [ -e "${pgsql_install_dir}/bin/psql" ] && { echo "${CWARNING}PostgreSQL already installed! ${CEND}"; unset db_option; break; }
@@ -648,8 +648,8 @@ if [ ${ARG_NUM} == 0 ]; then
           echo -e "\t${CMSG}11${CEND}. Install php-8.1"
           echo -e "\t${CMSG}12${CEND}. Install php-8.2"
           echo -e "\t${CMSG}13${CEND}. Install php-8.3"
-          read -e -p "Please input a number:(Default 7 press Enter) " php_option
-          php_option=${php_option:-7}
+          read -e -p "Please input a number:(Default 13 press Enter) " php_option
+          php_option=${php_option:-13}
           if [[ ! ${php_option} =~ ^[1-9]$|^1[0-3]$ ]]; then
             echo "${CWARNING}input error! Please only input number 1~13${CEND}"
           else
@@ -783,8 +783,8 @@ if [ ${ARG_NUM} == 0 ]; then
       echo -e "\t${CMSG}14${CEND}. Install mongodb"
       echo -e "\t${CMSG}15${CEND}. Install swoole"
       echo -e "\t${CMSG}16${CEND}. Install xdebug(PHP>=5.5)"
-      read -e -p "Please input numbers:(Default '4 11 12' press Enter) " phpext_option
-      phpext_option=${phpext_option:-'4 11 12'}
+      read -e -p "Please input numbers:(Default '4 6 7 11 12' press Enter) " phpext_option
+      phpext_option=${phpext_option:-'4 6 7 11 12'}
       [ "${phpext_option}" == '0' ] && break
       array_phpext=(${phpext_option})
       array_all=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)

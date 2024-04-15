@@ -42,6 +42,7 @@ Install_PHP80() {
 
   if [ ! -e "/usr/local/lib/pkgconfig/libargon2.pc" ]; then
     tar xzf argon2-${argon2_ver}.tar.gz
+    mv phc-winner-argon2-${argon2_ver} argon2-${argon2_ver}
     pushd argon2-${argon2_ver} > /dev/null
     make -j ${THREAD} && make install
     [ ! -d /usr/local/lib/pkgconfig ] && mkdir -p /usr/local/lib/pkgconfig

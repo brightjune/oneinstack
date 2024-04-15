@@ -12,62 +12,82 @@ checkDownload() {
   # icu
   if ! command -v icu-config >/dev/null 2>&1 || icu-config --version | grep '^3.' || [ "${Ubuntu_ver}" == "20" ]; then
     echo "Download icu..."
-    src_url=${mirror_link}/oneinstack/src/icu4c-${icu4c_ver}-src.tgz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/icu4c-${icu4c_ver}-src.tgz && Download_src
+    src_url=https://github.com/unicode-org/icu/releases/download/release-${icu4c_ver/_/-}/icu4c-${icu4c_ver}-src.tgz && Download_src
   fi
 
   # General system utils
   if [ "${with_old_openssl_flag}" == 'y' ]; then
     echo "Download openSSL..."
-    src_url=${mirror_link}/oneinstack/src/openssl-${openssl_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/openssl-${openssl_ver}.tar.gz && Download_src
+    src_url=https://www.openssl.org/source/openssl-${openssl_ver}.tar.gz && Download_src
     echo "Download cacert.pem..."
     src_url=https://curl.se/ca/cacert.pem && Download_src
   fi
 
   # openssl1.1
   if [[ ${nginx_option} =~ ^[1-3]$ ]]; then
-      echo "Download openSSL1.1..."
-      src_url=${mirror_link}/oneinstack/src/openssl-${openssl11_ver}.tar.gz && Download_src
+    echo "Download openSSL1.1..."
+    #src_url=${mirror_link}/oneinstack/src/openssl-${openssl11_ver}.tar.gz && Download_src
+    src_url=https://www.openssl.org/source/openssl-${openssl11_ver}.tar.gz && Download_src
+
+    echo "Download Nginx Cache Purge..."
+    src_url=https://github.com/FRiCKLE/ngx_cache_purge/archive/refs/tags/${ngx_cache_purge_ver}.tar.gz && Download_src
+    mv ${ngx_cache_purge_ver}.tar.gz ngx_cache_purge-${ngx_cache_purge_ver}.tar.gz
+
+    echo "Download Nginx Sticky Module..."
+    git clone https://bitbucket.org/nginx-goodies/nginx-sticky-module-ng.git
+    sed -i "s/ngx_http_parse_multi_header_lines.*/ngx_http_parse_multi_header_lines(r, r->headers_in.cookie, \&iphp->sticky_conf->cookie_name, \&route) != NULL) {	/g" nginx-sticky-module-ng/ngx_http_sticky_module.c 
   fi
 
   # jemalloc
   if [[ ${nginx_option} =~ ^[1-3]$ ]] || [[ "${db_option}" =~ ^[1-9]$|^1[0-2]$ ]]; then
     echo "Download jemalloc..."
-    src_url=${mirror_link}/oneinstack/src/jemalloc-${jemalloc_ver}.tar.bz2 && Download_src
+    #src_url=${mirror_link}/oneinstack/src/jemalloc-${jemalloc_ver}.tar.bz2 && Download_src
+    src_url=https://github.com/jemalloc/jemalloc/releases/download/${jemalloc_ver}/jemalloc-${jemalloc_ver}.tar.bz2 && Download_src
   fi
 
   # pcre
   if [[ "${nginx_option}" =~ ^[1-3]$ ]] || [ "${apache_flag}" == 'y' ]; then
     echo "Download pcre..."
-    src_url=${mirror_link}/oneinstack/src/pcre-${pcre_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/pcre-${pcre_ver}.tar.gz && Download_src
+    #src_url=https://udomain.dl.sourceforge.net/project/pcre/pcre/${pcre_ver}/pcre-${pcre_ver}.tar.gz && Download_src
+    src_url=https://ftp.exim.org/pub/pcre/pcre-${pcre_ver}.tar.gz && Download_src
   fi
 
   # nginx/tengine/openresty
   case "${nginx_option}" in
     1)
       echo "Download nginx..."
-      src_url=${mirror_link}/oneinstack/src/nginx-${nginx_ver}.tar.gz && Download_src
+      #src_url=${mirror_link}/oneinstack/src/nginx-${nginx_ver}.tar.gz && Download_src
+      src_url=http://nginx.org/download/nginx-${nginx_ver}.tar.gz && Download_src
       ;;
     2)
       echo "Download tengine..."
-      #src_url=http://tengine.taobao.org/download/tengine-${tengine_ver}.tar.gz && Download_src
-      src_url=${mirror_link}/oneinstack/src/tengine-${tengine_ver}.tar.gz && Download_src
+      #src_url=${mirror_link}/oneinstack/src/tengine-${tengine_ver}.tar.gz && Download_src
+      src_url=http://tengine.taobao.org/download/tengine-${tengine_ver}.tar.gz && Download_src
       ;;
     3)
       echo "Download openresty..."
-      src_url=${mirror_link}/oneinstack/src/openresty-${openresty_ver}.tar.gz && Download_src
+      #src_url=${mirror_link}/oneinstack/src/openresty-${openresty_ver}.tar.gz && Download_src
+      src_url=https://openresty.org/download/openresty-${openresty_ver}.tar.gz && Download_src
       ;;
   esac
 
   # if nginx_option=4 download caddy
   if [ "${nginx_option}" == '4' ]; then
     echo "Download caddy ${caddy_ver}"
-    src_url=${mirror_link}/caddy/v${caddy_ver}/caddy-${caddy_ver}.tar.gz  && Download_src
+    #src_url=${mirror_link}/caddy/v${caddy_ver}/caddy-${caddy_ver}.tar.gz  && Download_src
+    src_url=https://github.com/caddyserver/caddy/releases/download/v${caddy_ver}/caddy_${caddy_ver}_src.tar.gz && Download_src
+    mv caddy_${caddy_ver}_src.tar.gz caddy_${caddy_ver}.tar.gz
   fi
 
   # caddy
   if [ "${caddy_flag}" == 'y' ]; then
     echo "Download caddy ${caddy_ver}"
-    src_url=${mirror_link}/caddy/v${caddy_ver}/caddy-${caddy_ver}.tar.gz  && Download_src
+    #src_url=${mirror_link}/caddy/v${caddy_ver}/caddy-${caddy_ver}.tar.gz  && Download_src
+    src_url=https://github.com/caddyserver/caddy/releases/download/v${caddy_ver}/caddy_${caddy_ver}_src.tar.gz && Download_src
+    mv caddy_${caddy_ver}_src.tar.gz caddy_${caddy_ver}.tar.gz
   fi
 
   # apache
@@ -76,27 +96,33 @@ checkDownload() {
     src_url=http://archive.apache.org/dist/httpd/httpd-${apache_ver}.tar.gz && Download_src
     src_url=http://archive.apache.org/dist/apr/apr-${apr_ver}.tar.gz && Download_src
     src_url=http://archive.apache.org/dist/apr/apr-util-${apr_util_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/apache/httpd/nghttp2-${nghttp2_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/apache/httpd/nghttp2-${nghttp2_ver}.tar.gz && Download_src
+    src_url=https://github.com/nghttp2/nghttp2/releases/download/v${nghttp2_ver}/nghttp2-${nghttp2_ver}.tar.gz && Download_src
   fi
 
   # tomcat
   case "${tomcat_option}" in
     1)
       echo "Download tomcat 10..."
-      src_url=${mirror_link}/apache/tomcat/v${tomcat10_ver}/apache-tomcat-${tomcat10_ver}.tar.gz && Download_src
+      #src_url=${mirror_link}/apache/tomcat/v${tomcat10_ver}/apache-tomcat-${tomcat10_ver}.tar.gz && Download_src
+      src_url=https://archive.apache.org/dist/tomcat/tomcat-10/v${tomcat10_ver}/bin/apache-tomcat-${tomcat10_ver}.tar.gz && Download_src
       ;;
     2)
       echo "Download tomcat 9..."
-      src_url=${mirror_link}/apache/tomcat/v${tomcat9_ver}/apache-tomcat-${tomcat9_ver}.tar.gz && Download_src
+      #src_url=${mirror_link}/apache/tomcat/v${tomcat9_ver}/apache-tomcat-${tomcat9_ver}.tar.gz && Download_src
+      src_url=https://archive.apache.org/dist/tomcat/tomcat-9/v${tomcat9_ver}/bin/apache-tomcat-${tomcat9_ver}.tar.gz && Download_src
       ;;
     3)
       echo "Download tomcat 8..."
-      src_url=${mirror_link}/apache/tomcat/v${tomcat8_ver}/apache-tomcat-${tomcat8_ver}.tar.gz && Download_src
+      #src_url=${mirror_link}/apache/tomcat/v${tomcat8_ver}/apache-tomcat-${tomcat8_ver}.tar.gz && Download_src
+      src_url=https://archive.apache.org/dist/tomcat/tomcat-8/v${tomcat8_ver}/bin/apache-tomcat-${tomcat8_ver}.tar.gz && Download_src
       ;;
     4)
       echo "Download tomcat 7..."
-      src_url=${mirror_link}/apache/tomcat/v${tomcat7_ver}/apache-tomcat-${tomcat7_ver}.tar.gz && Download_src
-      src_url=${mirror_link}/apache/tomcat/v${tomcat7_ver}/catalina-jmx-remote.jar && Download_src
+      #src_url=${mirror_link}/apache/tomcat/v${tomcat7_ver}/apache-tomcat-${tomcat7_ver}.tar.gz && Download_src
+      #src_url=${mirror_link}/apache/tomcat/v${tomcat7_ver}/catalina-jmx-remote.jar && Download_src
+      src_url=https://archive.apache.org/dist/tomcat/tomcat-7/v${tomcat7_ver}/bin/apache-tomcat-${tomcat7_ver}.tar.gz && Download_src
+      src_url=https://archive.apache.org/dist/tomcat/tomcat-7/v${tomcat7_ver}/bin/extras/catalina-jmx-remote.jar && Download_src
       ;;
   esac
 
@@ -111,7 +137,8 @@ checkDownload() {
       [[ "${db_option}" =~ ^[2,5,6,7]$|^10$ ]] && boost_ver=${boost_oldver}
       [[ "${db_option}" =~ ^9$ ]] && boost_ver=${boost_percona_ver}
       echo "Download boost..."
-      [ "${OUTIP_STATE}"x == "China"x ] && DOWN_ADDR_BOOST=${mirror_link}/oneinstack/src || DOWN_ADDR_BOOST=https://downloads.sourceforge.net/project/boost/boost/${boost_ver}
+      #[ "${OUTIP_STATE}"x == "China"x ] && DOWN_ADDR_BOOST=${mirror_link}/oneinstack/src || DOWN_ADDR_BOOST=https://downloads.sourceforge.net/project/boost/boost/${boost_ver}
+      DOWN_ADDR_BOOST=https://downloads.sourceforge.net/project/boost/boost/${boost_ver}
       boostVersion2=$(echo ${boost_ver} | awk -F. '{print $1"_"$2"_"$3}')
       src_url=${DOWN_ADDR_BOOST}/boost_${boostVersion2}.tar.gz && Download_src
     fi
@@ -239,7 +266,7 @@ checkDownload() {
         elif [ "${dbinstallmethod}" == '2' ]; then
           echo "Download MySQL 5.5 source package..."
           FILE_NAME=mysql-${mysql55_ver}.tar.gz
-          src_url=${mirror_link}/oneinstack/src/mysql-5.5-fix-arm-client_plugin.patch && Download_src
+          #src_url=${mirror_link}/oneinstack/src/mysql-5.5-fix-arm-client_plugin.patch && Download_src
         fi
         # start download
         src_url=${DOWN_ADDR_MYSQL}/${FILE_NAME} && Download_src
@@ -495,12 +522,14 @@ checkDownload() {
   # PHP
   if [[ "${php_option}" =~ ^[1-9]$|^1[0-3]$ ]] || [[ "${mphp_ver}" =~ ^5[3-6]$|^7[0-4]$|^8[0-3]$ ]]; then
     echo "PHP common..."
-    src_url=${mirror_link}/oneinstack/src/libiconv-${libiconv_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/libiconv-${libiconv_ver}.tar.gz && Download_src
+    src_url=https://ftp.gnu.org/gnu/libiconv/libiconv-${libiconv_ver}.tar.gz && Download_src
     src_url=https://curl.haxx.se/download/curl-${curl_ver}.tar.gz && Download_src
     src_url=https://downloads.sourceforge.net/project/mhash/mhash/${mhash_ver}/mhash-${mhash_ver}.tar.gz && Download_src
     src_url=https://downloads.sourceforge.net/project/mcrypt/Libmcrypt/${libmcrypt_ver}/libmcrypt-${libmcrypt_ver}.tar.gz && Download_src
     src_url=https://downloads.sourceforge.net/project/mcrypt/MCrypt/${mcrypt_ver}/mcrypt-${mcrypt_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/freetype-${freetype_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/freetype-${freetype_ver}.tar.gz && Download_src
+    src_url=https://download.savannah.gnu.org/releases/freetype/freetype-${freetype_ver}.tar.gz && Download_src
   fi
 
   if [ "${php_option}" == '1' ] || [ "${mphp_ver}" == '53' ]; then
@@ -522,37 +551,63 @@ checkDownload() {
     src_url=https://secure.php.net/distributions/php-${php71_ver}.tar.gz && Download_src
   elif [ "${php_option}" == '7' ] || [ "${mphp_ver}" == '72' ]; then
     src_url=https://secure.php.net/distributions/php-${php72_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/argon2-${argon2_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/libsodium-${libsodium_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/argon2-${argon2_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/libsodium-${libsodium_ver}.tar.gz && Download_src
+    src_url=https://github.com/P-H-C/phc-winner-argon2/archive/refs/tags/${argon2_ver}.tar.gz && Download_src
+    mv ${argon2_ver}.tar.gz argon2-${argon2_ver}.tar.gz
+    src_url=https://download.libsodium.org/libsodium/releases/libsodium-${libsodium_ver}.tar.gz && Download_src
   elif [ "${php_option}" == '8' ] || [ "${mphp_ver}" == '73' ]; then
     src_url=https://secure.php.net/distributions/php-${php73_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/argon2-${argon2_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/libsodium-${libsodium_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/argon2-${argon2_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/libsodium-${libsodium_ver}.tar.gz && Download_src
+    src_url=https://github.com/P-H-C/phc-winner-argon2/archive/refs/tags/${argon2_ver}.tar.gz && Download_src
+    mv ${argon2_ver}.tar.gz argon2-${argon2_ver}.tar.gz
+    src_url=https://download.libsodium.org/libsodium/releases/libsodium-${libsodium_ver}.tar.gz && Download_src
   elif [ "${php_option}" == '9' ] || [ "${mphp_ver}" == '74' ]; then
     src_url=https://secure.php.net/distributions/php-${php74_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/argon2-${argon2_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/libsodium-${libsodium_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/libzip-${libzip_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/argon2-${argon2_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/libsodium-${libsodium_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/libzip-${libzip_ver}.tar.gz && Download_src
+    src_url=https://github.com/P-H-C/phc-winner-argon2/archive/refs/tags/${argon2_ver}.tar.gz && Download_src
+    mv ${argon2_ver}.tar.gz argon2-${argon2_ver}.tar.gz
+    src_url=https://download.libsodium.org/libsodium/releases/libsodium-${libsodium_ver}.tar.gz && Download_src
+    src_url=https://libzip.org/download/libzip-${libzip_ver}.tar.gz && Download_src
   elif [ "${php_option}" == '10' ] || [ "${mphp_ver}" == '80' ]; then
     src_url=https://secure.php.net/distributions/php-${php80_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/argon2-${argon2_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/libsodium-${libsodium_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/libzip-${libzip_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/argon2-${argon2_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/libsodium-${libsodium_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/libzip-${libzip_ver}.tar.gz && Download_src
+    src_url=https://github.com/P-H-C/phc-winner-argon2/archive/refs/tags/${argon2_ver}.tar.gz && Download_src
+    mv ${argon2_ver}.tar.gz argon2-${argon2_ver}.tar.gz
+    src_url=https://download.libsodium.org/libsodium/releases/libsodium-${libsodium_ver}.tar.gz && Download_src
+    src_url=https://libzip.org/download/libzip-${libzip_ver}.tar.gz && Download_src
   elif [ "${php_option}" == '11' ] || [ "${mphp_ver}" == '81' ]; then
     src_url=https://secure.php.net/distributions/php-${php81_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/argon2-${argon2_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/libsodium-${libsodium_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/libzip-${libzip_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/argon2-${argon2_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/libsodium-${libsodium_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/libzip-${libzip_ver}.tar.gz && Download_src
+    src_url=https://github.com/P-H-C/phc-winner-argon2/archive/refs/tags/${argon2_ver}.tar.gz && Download_src
+    mv ${argon2_ver}.tar.gz argon2-${argon2_ver}.tar.gz
+    src_url=https://download.libsodium.org/libsodium/releases/libsodium-${libsodium_ver}.tar.gz && Download_src
+    src_url=https://libzip.org/download/libzip-${libzip_ver}.tar.gz && Download_src
   elif [ "${php_option}" == '12' ] || [ "${mphp_ver}" == '82' ]; then
     src_url=https://secure.php.net/distributions/php-${php82_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/argon2-${argon2_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/libsodium-${libsodium_up_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/libzip-${libzip_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/argon2-${argon2_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/libsodium-${libsodium_up_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/libzip-${libzip_ver}.tar.gz && Download_src
+    src_url=https://github.com/P-H-C/phc-winner-argon2/archive/refs/tags/${argon2_ver}.tar.gz && Download_src
+    mv ${argon2_ver}.tar.gz argon2-${argon2_ver}.tar.gz
+    src_url=https://download.libsodium.org/libsodium/releases/libsodium-${libsodium_up_ver}.tar.gz && Download_src
+    src_url=https://libzip.org/download/libzip-${libzip_ver}.tar.gz && Download_src
   elif [ "${php_option}" == '13' ] || [ "${mphp_ver}" == '83' ]; then
     src_url=https://secure.php.net/distributions/php-${php83_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/argon2-${argon2_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/libsodium-${libsodium_up_ver}.tar.gz && Download_src
-    src_url=${mirror_link}/oneinstack/src/libzip-${libzip_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/argon2-${argon2_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/libsodium-${libsodium_up_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/libzip-${libzip_ver}.tar.gz && Download_src
+    src_url=https://github.com/P-H-C/phc-winner-argon2/archive/refs/tags/${argon2_ver}.tar.gz && Download_src
+    mv ${argon2_ver}.tar.gz argon2-${argon2_ver}.tar.gz
+    src_url=https://download.libsodium.org/libsodium/releases/libsodium-${libsodium_up_ver}.tar.gz && Download_src
+    src_url=https://libzip.org/download/libzip-${libzip_ver}.tar.gz && Download_src
   fi
 
   # PHP OPCache
@@ -622,13 +677,16 @@ checkDownload() {
   # SourceGuardian
   if [ "${pecl_sourceguardian}" == '1' ]; then
     echo "Download SourceGuardian..."
-    src_url=${mirror_link}/oneinstack/src/loaders.linux-${ARCH}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/loaders.linux-${ARCH}.tar.gz && Download_src
+    src_url=https://www.sourceguardian.com/loaders/download/loaders.linux-${ARCH}.tar.gz && Download_src
   fi
 
   # imageMagick
   if [ "${pecl_imagick}" == '1' ]; then
     echo "Download ImageMagick..."
-    src_url=${mirror_link}/oneinstack/src/ImageMagick-${imagemagick_ver}.tar.gz && Download_src
+    #src_url=${mirror_link}/oneinstack/src/ImageMagick-${imagemagick_ver}.tar.gz && Download_src
+    src_url=https://github.com/ImageMagick/ImageMagick/archive/refs/tags/${imagemagick_ver}.tar.gz && Download_src
+    mv ${imagemagick_ver}.tar.gz ImageMagick-${imagemagick_ver}.tar.gz
     echo "Download imagick..."
     if [[ "${php_option}" =~ ^1$ ]]; then
       src_url=https://pecl.php.net/get/imagick-${imagick_oldver}.tgz && Download_src
@@ -673,7 +731,8 @@ checkDownload() {
   # memcached-server
   if [ "${memcached_flag}" == 'y' ]; then
     echo "Download memcached-server..."
-    [ "${OUTIP_STATE}"x == "China"x ] && DOWN_ADDR=${mirror_link}/oneinstack/src || DOWN_ADDR=http://www.memcached.org/files
+    #[ "${OUTIP_STATE}"x == "China"x ] && DOWN_ADDR=${mirror_link}/oneinstack/src || DOWN_ADDR=http://www.memcached.org/files
+    DOWN_ADDR=http://www.memcached.org/files
     src_url=${DOWN_ADDR}/memcached-${memcached_ver}.tar.gz && Download_src
   fi
 
