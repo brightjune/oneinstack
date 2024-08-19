@@ -29,14 +29,14 @@ else
     # 项目编译
     yarn build
 
+    # 将Assets目录同步到CDN
+    rsync -avzl -e "ssh -o HostKeyAlgorithms=+ssh-dss -i ~/.ssh/id_rsa" $version_path/dist/client/assets/ sshacs@glassesshop-static.rsync.upload.akamai.com:/1343177/v2/assets
+
     # 设置软链接
     ln -nfs $version_path "$project_path/current"
 
     # PM2重启项目
     pm2 restart gs-vue-ssr
-
-    # 将Assets目录同步到CDN
-    rsync -avzl -e "ssh -o HostKeyAlgorithms=+ssh-dss -i ~/.ssh/id_rsa" $project_path/current/dist/client/assets/ sshacs@glassesshop-static.rsync.upload.akamai.com:/1343177/v2/assets
 fi
 
 echo '<==========================================================================='
