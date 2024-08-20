@@ -20,17 +20,20 @@ for index in "${!APP_PORTS[@]}"; do
     APP_PORT="${APP_PORTS[index]}"
 
     # 停止APP_PORT端口服务
-    ln -nfs $NGINX_ROOT/snippets/upstreams/upstream-$APP_PORT.conf $NGINX_ROOT/snippets/upstream.conf
+    ln -nfs $NGINX_ROOT/snippets/upstreams/java-upstream-$APP_PORT.conf $NGINX_ROOT/snippets/upstreams/java-upstream.conf
     sudo systemctl reload nginx
 
     JAVA_PID=$(ss -ltnp | grep :$APP_PORT | awk '{split($6, a, ","); gsub("pid=", "", a[2]); print a[2]}')
-    echo "Stopping ${APP_PORT}, PID [${JAVA_PID}]..."
-    kill -9 $JAVA_PID
+    if [ -n "$JAVA_PID" ]; then
+        echo "Stopping ${APP_PORT}, PID [${JAVA_PID}]..."
+        kill -9 $JAVA_PID
+    fi
 
     cd ${APP_HOME}
     nohup java -jar ruoyi-admin.jar -Xms2G -Xmx4G -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError -XX:+PrintGCDateStamps  -XX:+PrintGCDetails -XX:NewRatio=1 -XX:SurvivorRatio=30 -XX:+UseParallelGC -XX:+UseParallelOldGC --server.port=$APP_PORT > /dev/null 2>&1 &
 
     while : ; do
+        echo "Check port ${APP_PORT}"
         sleep 10
         IS_UP=$(lsof -i :$APP_PORT | wc -l)
         if [ "$IS_UP" -ge 1 ]; then
@@ -41,7 +44,7 @@ for index in "${!APP_PORTS[@]}"; do
     sleep 30
 done
 
-ln -nfs $NGINX_ROOT/snippets/upstreams/upstream.conf $NGINX_ROOT/snippets/upstream.conf
+ln -nfs $NGINX_ROOT/snippets/upstreams/java-upstream-default.conf $NGINX_ROOT/snippets/upstreams/java-upstream.conf
 sudo systemctl reload nginx
 
 echo '<==========================================================================='
