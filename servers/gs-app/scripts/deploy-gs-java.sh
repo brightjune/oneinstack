@@ -10,7 +10,13 @@ NGINX_ROOT=/data/nginx
 # 项目目录
 APP_HOME=/data/wwwroot/gs-java-v2/ruoyi-admin/target
 # 应用端口
-APP_PORTS=(4746 4747)
+if [ -n "$1" ]; then
+    IFS=','
+    read -r -a APP_PORTS <<< "$1"
+    #APP_PORTS=($1)
+else
+    APP_PORTS=(4746 4747)
+fi
 
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
