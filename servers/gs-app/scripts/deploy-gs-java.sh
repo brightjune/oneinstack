@@ -31,8 +31,9 @@ for index in "${!APP_PORTS[@]}"; do
 
     JAVA_PID=$(ss -ltnp | grep :$APP_PORT | awk '{split($6, a, ","); gsub("pid=", "", a[2]); print a[2]}')
     if [ -n "$JAVA_PID" ]; then
+        sleep 2
         echo "Stopping ${APP_PORT}, PID [${JAVA_PID}]..."
-        kill -9 $JAVA_PID
+        kill -usr2 $JAVA_PID
     fi
 
     cd ${APP_HOME}

@@ -6,6 +6,8 @@
 
 echo '=======================' $(date +"%Y-%m-%d %H:%M:%S") '===============================>'
 
+ACTION=$1
+
 # 项目目录
 project_path="/data/wwwroot/gs-web-vue"
 cd "$project_path/source"
@@ -30,13 +32,26 @@ else
     yarn build
 
     # 将Assets目录同步到CDN
-    rsync -avzl -e "ssh -o HostKeyAlgorithms=+ssh-dss -i ~/.ssh/id_rsa" $version_path/dist/client/assets/ sshacs@glassesshop-static.rsync.upload.akamai.com:/1343177/v2/assets
+    if [ "${ACTION,,}"x = "upload"x ]; then
+        rsync -avzl -e "ssh -o HostKeyAlgorithms=+ssh-dss -i ~/.ssh/id_rsa" $version_path/dist/client/assets/ sshacs@glassesshop-static.rsync.upload.akamai.com:/1343177/v2/assets
+    fi
 
     # 设置软链接
     ln -nfs $version_path "$project_path/current"
 
     # PM2重启项目
     pm2 restart gs-vue-ssr
+
+    # 删除过期的目录(默认删除3天前的过期目录)
+    currentDate=`date +%s`
+    let isDeleted=24*3600*3
+    for file in $project_path/version/*; do
+        createdTime=`stat -c %Y $file`
+        if [ $[ $currentDate - $createdTime ] -gt $isDeleted ]; then
+            echo "Delete File: $file"
+            /bin/rm -rf $file
+        fi
+    done
 fi
 
 echo '<==========================================================================='
