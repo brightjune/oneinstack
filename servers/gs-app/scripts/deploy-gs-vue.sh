@@ -29,7 +29,18 @@ else
     cd $version_path
 
     # 项目编译
-    yarn build
+    echo '开始构建项目（yarn build）'
+    build_output=$(yarn build 2>&1)
+    # 检查$build_output变量中是否包含错误信息
+    if echo "$build_output" | grep -q "error"; then
+        # 输出构建错误详情
+        echo "构建失败，输出结果包含错误信息"
+        echo "$build_output"
+        exit 1
+    else
+        echo "构建成功，输出构建成功的详情（如有需要）"
+        #echo "$build_output"
+    fi
 
     # 将Assets目录同步到CDN
     if [ "${ACTION,,}"x = "upload"x ]; then
