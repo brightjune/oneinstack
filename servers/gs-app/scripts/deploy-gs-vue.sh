@@ -56,10 +56,10 @@ else
     # PM2重启项目
     pm2 restart gs-vue-ssr
 
-    # 删除过期的目录(默认删除3天前的过期目录), 并保存最新 3个文件夹
+    # 删除过期的目录(默认删除5天前的过期目录), 并保存最新 3个文件夹
     reservedNum=3
     currentDate=`date +%s`
-    let isDeleted=24*3600*7
+    let isDeleted=24*3600*5
     for file in $project_path/version/*; do
         folderNum=$(ls -l $project_path/version | grep 'source' | wc -l)
         if [ $folderNum -gt $reservedNum ]; then
