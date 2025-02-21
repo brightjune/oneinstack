@@ -145,6 +145,76 @@ checkDownload() {
 
     case "${db_option}" in
       1)
+        # MySQL 8.4
+        if [ "${OUTIP_STATE}"x == "China"x ]; then
+          DOWN_ADDR_MYSQL=https://cdn.mysql.com/Downloads/MySQL-8.4
+          DOWN_ADDR_MYSQL_BK=https://mirrors.aliyun.com/mysql/MySQL-8.4
+          DOWN_ADDR_MYSQL_BK2=http://mirrors.tuna.tsinghua.edu.cn/mysql/downloads/MySQL-8.4
+        else
+          DOWN_ADDR_MYSQL=https://cdn.mysql.com/Downloads/MySQL-8.4
+          DOWN_ADDR_MYSQL_BK=https://mirrors.dotsrc.org/mysql/Downloads/MySQL-8.4
+        fi
+
+        if [ "${dbinstallmethod}" == '1' ]; then
+          echo "Download MySQL 8.4 binary package..."
+          FILE_NAME=mysql-${mysql80_ver}-linux-glibc2.12-x86_64.tar.xz
+        elif [ "${dbinstallmethod}" == '2' ]; then
+          echo "Download MySQL 8.4 source package..."
+          FILE_NAME=mysql-${mysql80_ver}.tar.gz
+        fi
+        # start download
+        src_url=${DOWN_ADDR_MYSQL}/${FILE_NAME} && Download_src
+        src_url=${DOWN_ADDR_MYSQL}/${FILE_NAME}.md5 && Download_src
+        # verifying download
+        MYSQL_TAR_MD5=$(awk '{print $1}' ${FILE_NAME}.md5)
+        [ -z "${MYSQL_TAR_MD5}" ] && MYSQL_TAR_MD5=$(curl -s ${DOWN_ADDR_MYSQL_BK}/${FILE_NAME}.md5 | grep ${FILE_NAME} | awk '{print $1}')
+        tryDlCount=0
+        while [ "$(md5sum ${FILE_NAME} | awk '{print $1}')" != "${MYSQL_TAR_MD5}" ]; do
+          wget -c --no-check-certificate ${DOWN_ADDR_MYSQL_BK}/${FILE_NAME};sleep 1
+          let "tryDlCount++"
+          [ "$(md5sum ${FILE_NAME} | awk '{print $1}')" == "${MYSQL_TAR_MD5}" -o "${tryDlCount}" == '6' ] && break || continue
+        done
+        if [ "${tryDlCount}" == '6' ]; then
+          echo "${CFAILURE}${FILE_NAME} download failed, Please contact the author! ${CEND}"
+          kill -9 $$; exit 1;
+        fi
+        ;;
+      2)
+        # MySQL 8.2
+        if [ "${OUTIP_STATE}"x == "China"x ]; then
+          DOWN_ADDR_MYSQL=https://cdn.mysql.com/Downloads/MySQL-8.2
+          DOWN_ADDR_MYSQL_BK=https://mirrors.aliyun.com/mysql/MySQL-8.2
+          DOWN_ADDR_MYSQL_BK2=http://mirrors.tuna.tsinghua.edu.cn/mysql/downloads/MySQL-8.2
+        else
+          DOWN_ADDR_MYSQL=https://cdn.mysql.com/Downloads/MySQL-8.2
+          DOWN_ADDR_MYSQL_BK=https://mirrors.dotsrc.org/mysql/Downloads/MySQL-8.2
+        fi
+
+        if [ "${dbinstallmethod}" == '1' ]; then
+          echo "Download MySQL 8.2 binary package..."
+          FILE_NAME=mysql-${mysql80_ver}-linux-glibc2.12-x86_64.tar.xz
+        elif [ "${dbinstallmethod}" == '2' ]; then
+          echo "Download MySQL 8.2 source package..."
+          FILE_NAME=mysql-${mysql80_ver}.tar.gz
+        fi
+        # start download
+        src_url=${DOWN_ADDR_MYSQL}/${FILE_NAME} && Download_src
+        src_url=${DOWN_ADDR_MYSQL}/${FILE_NAME}.md5 && Download_src
+        # verifying download
+        MYSQL_TAR_MD5=$(awk '{print $1}' ${FILE_NAME}.md5)
+        [ -z "${MYSQL_TAR_MD5}" ] && MYSQL_TAR_MD5=$(curl -s ${DOWN_ADDR_MYSQL_BK}/${FILE_NAME}.md5 | grep ${FILE_NAME} | awk '{print $1}')
+        tryDlCount=0
+        while [ "$(md5sum ${FILE_NAME} | awk '{print $1}')" != "${MYSQL_TAR_MD5}" ]; do
+          wget -c --no-check-certificate ${DOWN_ADDR_MYSQL_BK}/${FILE_NAME};sleep 1
+          let "tryDlCount++"
+          [ "$(md5sum ${FILE_NAME} | awk '{print $1}')" == "${MYSQL_TAR_MD5}" -o "${tryDlCount}" == '6' ] && break || continue
+        done
+        if [ "${tryDlCount}" == '6' ]; then
+          echo "${CFAILURE}${FILE_NAME} download failed, Please contact the author! ${CEND}"
+          kill -9 $$; exit 1;
+        fi
+        ;;
+      3)
         # MySQL 8.0
         if [ "${OUTIP_STATE}"x == "China"x ]; then
           DOWN_ADDR_MYSQL=https://cdn.mysql.com/Downloads/MySQL-8.0
@@ -179,7 +249,7 @@ checkDownload() {
           kill -9 $$; exit 1;
         fi
         ;;
-      2)
+      4)
         # MySQL 5.7
         if [ "${OUTIP_STATE}"x == "China"x ]; then
           DOWN_ADDR_MYSQL=https://cdn.mysql.com/Downloads/MySQL-5.7
@@ -214,7 +284,7 @@ checkDownload() {
           kill -9 $$; exit 1;
         fi
         ;;
-      3)
+      5)
         # MySQL 5.6
         if [ "${OUTIP_STATE}"x == "China"x ]; then
           DOWN_ADDR_MYSQL=http://mirrors.aliyun.com/mysql/MySQL-5.6
@@ -249,7 +319,7 @@ checkDownload() {
           kill -9 $$; exit 1;
         fi
         ;;
-      4)
+      6)
         # MySQL 5.5
         if [ "${OUTIP_STATE}"x == "China"x ]; then
           DOWN_ADDR_MYSQL=http://mirrors.aliyun.com/mysql/MySQL-5.5
@@ -285,28 +355,28 @@ checkDownload() {
           kill -9 $$; exit 1;
         fi
         ;;
-      [5-8])
+      [7-10])
 	case "${db_option}" in
-          5)
+          7)
             mariadb_ver=${mariadb1011_ver}
 	    ;;
-          6)
+          8)
             mariadb_ver=${mariadb105_ver}
 	    ;;
-          7)
+          9)
             mariadb_ver=${mariadb104_ver}
 	    ;;
-          8)
+          10)
             mariadb_ver=${mariadb55_ver}
 	    ;;
         esac
 
         if [ "${dbinstallmethod}" == '1' ]; then
           FILE_NAME=mariadb-${mariadb_ver}-linux-systemd-x86_64.tar.gz
-	  FILE_TYPE=bintar-linux-systemd-x86_64
+	        FILE_TYPE=bintar-linux-systemd-x86_64
         elif [ "${dbinstallmethod}" == '2' ]; then
           FILE_NAME=mariadb-${mariadb_ver}.tar.gz
-	  FILE_TYPE=source
+	        FILE_TYPE=source
         fi
 
         if [ "${OUTIP_STATE}"x == "China"x ]; then
@@ -317,7 +387,7 @@ checkDownload() {
           DOWN_ADDR_MARIADB_BK=http://mirror.nodesdirect.com/mariadb/mariadb-${mariadb_ver}/${FILE_TYPE}
         fi
 
-        if [ "${db_option}" == '8' ]; then
+        if [ "${db_option}" == '10' ]; then
           DOWN_ADDR_MARIADB=https://archive.mariadb.org/mariadb-${mariadb_ver}/${FILE_TYPE}
           DOWN_ADDR_MARIADB_BK=${DOWN_ADDR_MARIADB}
         fi
@@ -338,7 +408,7 @@ checkDownload() {
           kill -9 $$; exit 1;
         fi
         ;;
-      9)
+      11)
         # Percona 8.0
         if [ "${dbinstallmethod}" == '1' ]; then
           echo "Download Percona 8.0 binary package..."
@@ -370,7 +440,7 @@ checkDownload() {
           kill -9 $$; exit 1;
         fi
         ;;
-      10)
+      12)
         # Precona 5.7
         if [ "${dbinstallmethod}" == '1' ]; then
           echo "Download Percona 5.7 binary package..."
@@ -402,7 +472,7 @@ checkDownload() {
           kill -9 $$; exit 1;
         fi
         ;;
-      11)
+      13)
         # Precona 5.6
         if [ "${dbinstallmethod}" == '1' ]; then
           echo "Download Percona 5.6 binary package..."
@@ -435,7 +505,7 @@ checkDownload() {
           kill -9 $$; exit 1;
         fi
         ;;
-      12)
+      14)
         # Percona 5.5
         if [ "${dbinstallmethod}" == '1' ]; then
           echo "Download Percona 5.5 binary package..."
@@ -468,7 +538,7 @@ checkDownload() {
           kill -9 $$; exit 1;
         fi
         ;;
-      13)
+      15)
         FILE_NAME=postgresql-${pgsql_ver}.tar.gz
         if [ "${OUTIP_STATE}"x == "China"x ]; then
           DOWN_ADDR_PGSQL=https://mirrors.tuna.tsinghua.edu.cn/postgresql/source/v${pgsql_ver}
@@ -492,7 +562,7 @@ checkDownload() {
           kill -9 $$; exit 1;
         fi
         ;;
-      14)
+      16)
         # MongoDB
         echo "Download MongoDB binary package..."
         FILE_NAME=mongodb-linux-x86_64-${mongodb_ver}.tgz
