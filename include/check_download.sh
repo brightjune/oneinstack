@@ -157,10 +157,10 @@ checkDownload() {
 
         if [ "${dbinstallmethod}" == '1' ]; then
           echo "Download MySQL 8.4 binary package..."
-          FILE_NAME=mysql-${mysql80_ver}-linux-glibc2.12-x86_64.tar.xz
+          FILE_NAME=mysql-${mysql84_ver}-linux-glibc2.12-x86_64.tar.xz
         elif [ "${dbinstallmethod}" == '2' ]; then
           echo "Download MySQL 8.4 source package..."
-          FILE_NAME=mysql-${mysql80_ver}.tar.gz
+          FILE_NAME=mysql-${mysql84_ver}.tar.gz
         fi
         # start download
         src_url=${DOWN_ADDR_MYSQL}/${FILE_NAME} && Download_src
@@ -192,10 +192,10 @@ checkDownload() {
 
         if [ "${dbinstallmethod}" == '1' ]; then
           echo "Download MySQL 8.2 binary package..."
-          FILE_NAME=mysql-${mysql80_ver}-linux-glibc2.12-x86_64.tar.xz
+          FILE_NAME=mysql-${mysql82_ver}-linux-glibc2.12-x86_64.tar.xz
         elif [ "${dbinstallmethod}" == '2' ]; then
           echo "Download MySQL 8.2 source package..."
-          FILE_NAME=mysql-${mysql80_ver}.tar.gz
+          FILE_NAME=mysql-${mysql82_ver}.tar.gz
         fi
         # start download
         src_url=${DOWN_ADDR_MYSQL}/${FILE_NAME} && Download_src
