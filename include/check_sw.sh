@@ -49,6 +49,12 @@ installDepsDebian() {
   for Package in ${pkgList}; do
     apt-get --no-install-recommends -y install ${Package}
   done
+  if [ "${Ubuntu_ver}" == '24' ]; then
+    ln -s /usr/lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5
+    ln -s /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/libtinfo.so.5
+    ln -s /usr/lib/x86_64-linux-gnu/libaio.so /usr/lib/x86_64-linux-gnu/libaio.so.1
+    ln -s /usr/lib/x86_64-linux-gnu/libaio.so /usr/local/lib/libaio.so.1
+  fi
 }
 
 installDepsRHEL() {
