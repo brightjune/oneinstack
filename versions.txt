@@ -58,13 +58,13 @@ php83_ver=8.3.17
 # Nodejs
 nodejs_ver=20.10.0
 
-libiconv_ver=1.16
-curl_ver=8.4.0
+libiconv_ver=1.18
+curl_ver=8.12.1
 libmcrypt_ver=2.5.8
 mcrypt_ver=2.6.8
 mhash_ver=0.9.9.9
-freetype_ver=2.10.1
-icu4c_ver=63_1
+freetype_ver=2.13.3
+icu4c_ver=76_1
 libsodium_ver=1.0.18
 libsodium_up_ver=1.0.19
 libzip_ver=1.2.0
