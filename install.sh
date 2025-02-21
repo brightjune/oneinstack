@@ -217,17 +217,17 @@ while :; do
   --db_option)
     db_option=$2
     shift 2
-    if [[ "${db_option}" =~ ^[1-9]$|^1[0-2]$ ]]; then
+    if [[ "${db_option}" =~ ^[1-9]$|^1[0-4]$ ]]; then
       [ -d "${db_install_dir}/support-files" ] && {
         echo "${CWARNING}MySQL already installed! ${CEND}"
         unset db_option
       }
-    elif [ "${db_option}" == '13' ]; then
+    elif [ "${db_option}" == '15' ]; then
       [ -e "${pgsql_install_dir}/bin/psql" ] && {
         echo "${CWARNING}PostgreSQL already installed! ${CEND}"
         unset db_option
       }
-    elif [ "${db_option}" == '14' ]; then
+    elif [ "${db_option}" == '16' ]; then
       [ -e "${mongo_install_dir}/bin/mongo" ] && {
         echo "${CWARNING}MongoDB already installed! ${CEND}"
         unset db_option
@@ -551,35 +551,37 @@ if [ ${ARG_NUM} == 0 ]; then
         while :; do
           echo
           echo 'Please select a version of the Database:'
-          echo -e "\t${CMSG} 1${CEND}. Install MySQL-8.0"
-          echo -e "\t${CMSG} 2${CEND}. Install MySQL-5.7"
-          echo -e "\t${CMSG} 3${CEND}. Install MySQL-5.6"
-          echo -e "\t${CMSG} 4${CEND}. Install MySQL-5.5"
-          echo -e "\t${CMSG} 5${CEND}. Install MariaDB-10.11"
-          echo -e "\t${CMSG} 6${CEND}. Install MariaDB-10.5"
-          echo -e "\t${CMSG} 7${CEND}. Install MariaDB-10.4"
-          echo -e "\t${CMSG} 8${CEND}. Install MariaDB-5.5"
-          echo -e "\t${CMSG} 9${CEND}. Install Percona-8.0"
-          echo -e "\t${CMSG}10${CEND}. Install Percona-5.7"
-          echo -e "\t${CMSG}11${CEND}. Install Percona-5.6"
-          echo -e "\t${CMSG}12${CEND}. Install Percona-5.5"
-          echo -e "\t${CMSG}13${CEND}. Install PostgreSQL"
-          echo -e "\t${CMSG}14${CEND}. Install MongoDB"
+          echo -e "\t${CMSG} 1${CEND}. Install MySQL-8.4"
+          echo -e "\t${CMSG} 2${CEND}. Install MySQL-8.2"
+          echo -e "\t${CMSG} 3${CEND}. Install MySQL-8.0"
+          echo -e "\t${CMSG} 4${CEND}. Install MySQL-5.7"
+          echo -e "\t${CMSG} 5${CEND}. Install MySQL-5.6"
+          echo -e "\t${CMSG} 6${CEND}. Install MySQL-5.5"
+          echo -e "\t${CMSG} 7${CEND}. Install MariaDB-10.11"
+          echo -e "\t${CMSG} 8${CEND}. Install MariaDB-10.5"
+          echo -e "\t${CMSG} 9${CEND}. Install MariaDB-10.4"
+          echo -e "\t${CMSG}10${CEND}. Install MariaDB-5.5"
+          echo -e "\t${CMSG}11${CEND}. Install Percona-8.0"
+          echo -e "\t${CMSG}12${CEND}. Install Percona-5.7"
+          echo -e "\t${CMSG}13${CEND}. Install Percona-5.6"
+          echo -e "\t${CMSG}14${CEND}. Install Percona-5.5"
+          echo -e "\t${CMSG}15${CEND}. Install PostgreSQL"
+          echo -e "\t${CMSG}16${CEND}. Install MongoDB"
           read -e -p "Please input a number:(Default 1 press Enter) " db_option
           db_option=${db_option:-1}
           if [[ "${db_option}" =~ ^[1-9]$|^1[0-4]$ ]]; then
-            if [ "${db_option}" == '13' ]; then
+            if [ "${db_option}" == '15' ]; then
               [ -e "${pgsql_install_dir}/bin/psql" ] && { echo "${CWARNING}PostgreSQL already installed! ${CEND}"; unset db_option; break; }
-            elif [ "${db_option}" == '14' ]; then
+            elif [ "${db_option}" == '16' ]; then
               [ -e "${mongo_install_dir}/bin/mongo" ] && { echo "${CWARNING}MongoDB already installed! ${CEND}"; unset db_option; break; }
             else
               [ -d "${db_install_dir}/support-files" ] && { echo "${CWARNING}MySQL already installed! ${CEND}"; unset db_option; break; }
             fi
             while :; do
-              if [ "${db_option}" == '13' ]; then
+              if [ "${db_option}" == '15' ]; then
                 read -e -p "Please input the postgres password of PostgreSQL(default: ${dbpostgrespwd}): " dbpwd
                 dbpwd=${dbpwd:-${dbpostgrespwd}}
-              elif [ "${db_option}" == '14' ]; then
+              elif [ "${db_option}" == '16' ]; then
                 read -e -p "Please input the root password of MongoDB(default: ${dbmongopwd}): " dbpwd
                 dbpwd=${dbpwd:-${dbmongopwd}}
               else
@@ -588,9 +590,9 @@ if [ ${ARG_NUM} == 0 ]; then
               fi
               [ -n "`echo ${dbpwd} | grep '[+|&]'`" ] && { echo "${CWARNING}input error,not contain a plus sign (+) and & ${CEND}"; continue; }
               if (( ${#dbpwd} >= 5 )); then
-                if [ "${db_option}" == '13' ]; then
+                if [ "${db_option}" == '15' ]; then
                   dbpostgrespwd=${dbpwd}
-                elif [ "${db_option}" == '14' ]; then
+                elif [ "${db_option}" == '16' ]; then
                   dbmongopwd=${dbpwd}
                 else
                   dbrootpwd=${dbpwd}
@@ -942,59 +944,67 @@ fi
 # Database
 case "${db_option}" in
   1)
+    . include/mysql-8.4.sh
+    Install_MySQL84 2>&1 | tee -a ${oneinstack_dir}/install.log
+    ;;
+  2)
+    . include/mysql-8.2.sh
+    Install_MySQL82 2>&1 | tee -a ${oneinstack_dir}/install.log
+    ;;
+  3)
     . include/mysql-8.0.sh
     Install_MySQL80 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
-  2)
+  4)
     . include/mysql-5.7.sh
     Install_MySQL57 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
-  3)
+  5)
     . include/mysql-5.6.sh
     Install_MySQL56 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
-  4)
+  6)
     . include/mysql-5.5.sh
     Install_MySQL55 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
-  5)
+  7)
     . include/mariadb-10.11.sh
     Install_MariaDB1011 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
-  6)
+  8)
     . include/mariadb-10.5.sh
     Install_MariaDB105 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
-  7)
+  9)
     . include/mariadb-10.4.sh
     Install_MariaDB104 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
-  8)
+  10)
     . include/mariadb-5.5.sh
     Install_MariaDB55 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
-  9)
+  11)
     [ "${Family}" == 'rhel' ] && [ "${RHEL_ver}" == '8' ] && dbinstallmethod=2 && checkDownload
     . include/percona-8.0.sh
     Install_Percona80 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
-  10)
+  12)
     . include/percona-5.7.sh
     Install_Percona57 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
-  11)
+  13)
     . include/percona-5.6.sh
     Install_Percona56 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
-  12)
+  14)
     . include/percona-5.5.sh
     Install_Percona55 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
-  13)
+  15)
     . include/postgresql.sh
     Install_PostgreSQL 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
-  14)
+  16)
     . include/mongodb.sh
     Install_MongoDB 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
