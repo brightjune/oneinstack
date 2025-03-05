@@ -9,11 +9,6 @@
 #       https://github.com/oneinstack/oneinstack
 
 Install_MySQL80() {
-  [ ! -e "/usr/lib/x86_64-linux-gnu/libncurses.so.5" ] && ln -s /usr/lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5
-  [ ! -e "/usr/lib/x86_64-linux-gnu/libtinfo.so.5" ] && ln -s /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/libtinfo.so.5
-  [ ! -e "/usr/lib/x86_64-linux-gnu/libaio.so.1" ] && ln -s /usr/lib/x86_64-linux-gnu/libaio.so /usr/lib/x86_64-linux-gnu/libaio.so.1
-  [ ! -e "/usr/local/lib/libaio.so.1" ] && ln -s /usr/lib/x86_64-linux-gnu/libaio.so /usr/local/lib/libaio.so.1
-
   pushd ${oneinstack_dir}/src > /dev/null
   id -u mysql >/dev/null 2>&1
   [ $? -ne 0 ] && useradd -M -s /sbin/nologin mysql
