@@ -132,7 +132,7 @@ checkDownload() {
     src_url=http://archive.apache.org/dist/apr/apr-${apr_ver}.tar.gz && Download_src
   fi
 
-  if [[ "${db_option}" =~ ^[1-9]$|^1[0-4]$ ]]; then
+  if [[ "${db_option}" =~ ^[1-9]$|^1[0-6]$ ]]; then
     if [[ "${db_option}" =~ ^[1,2,5,6,7,9]$|^10$ ]] && [ "${dbinstallmethod}" == "2" ]; then
       [[ "${db_option}" =~ ^[2,5,6,7]$|^10$ ]] && boost_ver=${boost_oldver}
       [[ "${db_option}" =~ ^9$ ]] && boost_ver=${boost_percona_ver}
