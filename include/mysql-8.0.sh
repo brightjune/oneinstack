@@ -15,10 +15,10 @@ Install_MySQL80() {
   if [ ! -f "/usr/lib/x86_64-linux-gnu/libtinfo.so.5" ]; then
     ln -s /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/libtinfo.so.5
   fi
-  if [ ! -f "/usr/lib/x86_64-linux-gnu/libtinfo.so.5" ]; then
+  if [ ! -f "/usr/lib/x86_64-linux-gnu/libaio.so.1" ]; then
     ln -s /usr/lib/x86_64-linux-gnu/libaio.so /usr/lib/x86_64-linux-gnu/libaio.so.1
   fi
-  if [ ! -f "/usr/lib/x86_64-linux-gnu/libtinfo.so.5" ]; then
+  if [ ! -f "/usr/local/lib/libaio.so.1" ]; then
     ln -s /usr/lib/x86_64-linux-gnu/libaio.so /usr/local/lib/libaio.so.1
   fi
 
