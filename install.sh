@@ -567,9 +567,9 @@ if [ ${ARG_NUM} == 0 ]; then
           echo -e "\t${CMSG}14${CEND}. Install Percona-5.5"
           echo -e "\t${CMSG}15${CEND}. Install PostgreSQL"
           echo -e "\t${CMSG}16${CEND}. Install MongoDB"
-          read -e -p "Please input a number:(Default 1 press Enter) " db_option
-          db_option=${db_option:-1}
-          if [[ "${db_option}" =~ ^[1-9]$|^1[0-4]$ ]]; then
+          read -e -p "Please input a number:(Default 3 press Enter) " db_option
+          db_option=${db_option:-3}
+          if [[ "${db_option}" =~ ^[1-9]$|^1[0-6]$ ]]; then  
             if [ "${db_option}" == '15' ]; then
               [ -e "${pgsql_install_dir}/bin/psql" ] && { echo "${CWARNING}PostgreSQL already installed! ${CEND}"; unset db_option; break; }
             elif [ "${db_option}" == '16' ]; then
@@ -619,7 +619,7 @@ if [ ${ARG_NUM} == 0 ]; then
             fi
             break
           else
-            echo "${CWARNING}input error! Please only input number 1~14${CEND}"
+            echo "${CWARNING}input error! Please only input number 1~16${CEND}"
           fi
         done
       fi
