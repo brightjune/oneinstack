@@ -113,8 +113,8 @@ ln -nfs "${version_path}" "${project_path}/current" || {
 }
 
 # 8. 重启 PM2 服务
-echo "重启 PM2 服务..."
-pm2 restart gs-vue-ssr || {
+echo "重启 PM2 服务(使用reload重载)..."
+pm2 reload gs-vue-ssr --update-env || {
     echo "Error: PM2 重启失败"
     exit 1
 }
