@@ -93,10 +93,15 @@ if [[ $DO_UPLOAD -eq 1 ]]; then
     echo "开始同步 Assets 到 CDN..."
     #rsync -avzl -e "ssh -o HostKeyAlgorithms=+ssh-dss -i ~/.ssh/id_rsa" $version_path/dist/client/assets/ sshacs@glassesshop-static.rsync.upload.akamai.com:/1343177/v2/assets
     #rsync -avzl -e "ssh -o HostKeyAlgorithms=+ssh-dss -i ~/.ssh/id_rsa" $version_path/dist/client/assets/ gs-akamai:/1343177/v2/assets
-    rsync -avzl \
-        -e "ssh -o HostKeyAlgorithms=+ssh-dss -i ~/.ssh/id_rsa" \
-        $version_path/dist/client/assets/ \
-        gs-akamai:/1343177/v2/assets
+
+    # 同步文件到Akamai
+    #rsync -avzl \
+    #    -e "ssh -o HostKeyAlgorithms=+ssh-dss -i ~/.ssh/id_rsa" \
+    #    $version_path/dist/client/assets/ \
+    #    gs-akamai:/1343177/v2/assets
+
+    # 同步文件到Aws
+    aws s3 sync $version_path/dist/client/assets/ s3://gs-res/v2/assets/
 
     if [[ $? -ne 0 ]]; then
         echo "Error: rsync 同步失败，退出部署"
