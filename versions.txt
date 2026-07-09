@@ -1,6 +1,6 @@
 # newest software version
 # Web
-nginx_ver=1.28.1
+nginx_ver=1.30.3
 caddy_ver=2.10.2
 tengine_ver=3.1.0
 openresty_ver=1.27.1.2
@@ -20,7 +20,7 @@ apr_util_ver=1.6.3
 nghttp2_ver=1.64.0
 
 # DB
-mysql84_ver=8.4.4
+mysql84_ver=8.4.10
 mysql82_ver=8.2.0
 mysql80_ver=8.0.41
 mysql57_ver=5.7.44
@@ -53,10 +53,10 @@ php73_ver=7.3.33
 php74_ver=7.4.33
 php80_ver=8.0.30
 php81_ver=8.1.34
-php82_ver=8.2.30
-php83_ver=8.3.29
-php84_ver=8.4.16
-php85_ver=8.5.5
+php82_ver=8.2.31
+php83_ver=8.3.31
+php84_ver=8.4.22
+php85_ver=8.5.7
 
 # Nodejs
 nodejs_ver=22.22.2
