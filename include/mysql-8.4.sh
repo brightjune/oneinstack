@@ -21,7 +21,7 @@ Install_MySQL84() {
     mv mysql-${mysql84_ver}-linux-glibc2.17-x86_64/* ${mysql_install_dir}
     sed -i "s@/usr/local/mysql@${mysql_install_dir}@g" ${mysql_install_dir}/bin/mysqld_safe
   elif [ "${dbinstallmethod}" == "2" ]; then
-    boostVersion2=$(echo ${boost_ver} | awk -F. '{print $1"_"$2"_"$3}')
+    boostVersion2=$(echo ${boost_mysql84_ver} | awk -F. '{print $1"_"$2"_"$3}')
     tar xzf boost_${boostVersion2}.tar.gz
     tar xzf mysql-${mysql84_ver}.tar.gz
     pushd mysql-${mysql84_ver}
@@ -45,10 +45,6 @@ Install_MySQL84() {
     make install
     popd
   fi
-
-  # backup openssl so
-  #[ ! -e "${mysql_install_dir}/lib/lib_bk" ] && mkdir ${mysql_install_dir}/lib/lib_bk
-  #/bin/mv ${mysql_install_dir}/lib/{libssl,libcrypto}.so* ${mysql_install_dir}/lib/lib_bk/
 
   if [ -d "${mysql_install_dir}/support-files" ]; then
     sed -i 's@executing mysqld_safe@executing mysqld_safe\nexport LD_PRELOAD=/usr/local/lib/libjemalloc.so@' ${mysql_install_dir}/bin/mysqld_safe
@@ -87,7 +83,8 @@ no-auto-rehash
 [mysqld]
 port = 3306
 socket = /tmp/mysql.sock
-default_authentication_plugin = mysql_native_password
+# In MySQL 8.4, mysql_native_password is deprecated but still available if needed.
+# default_authentication_plugin = mysql_native_password
 
 basedir = ${mysql_install_dir}
 datadir = ${mysql_data_dir}
@@ -124,7 +121,8 @@ thread_cache_size = 8
 ft_min_word_len = 4
 
 log_bin = mysql-bin
-binlog_format = mixed
+# In MySQL 8.4, binlog_format is deprecated.
+# binlog_format = row
 binlog_expire_logs_seconds = 604800
 
 log_error = ${mysql_data_dir}/mysql-error.log
