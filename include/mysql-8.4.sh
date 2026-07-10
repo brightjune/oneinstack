@@ -15,6 +15,8 @@ Install_MySQL84() {
 
   [ ! -d "${mysql_install_dir}" ] && mkdir -p ${mysql_install_dir}
   mkdir -p ${mysql_data_dir};chown mysql:mysql -R ${mysql_data_dir}
+  # fixed for Ubuntu 24.04
+  ln -s /usr/lib/x86_64-linux-gnu/libaio.so /usr/lib/x86_64-linux-gnu/libaio.so.1
 
   if [ "${dbinstallmethod}" == "1" ]; then
     tar xJf mysql-${mysql84_ver}-linux-glibc2.17-x86_64.tar.xz

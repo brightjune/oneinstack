@@ -62,8 +62,6 @@ Install_PHP85() {
     --enable-ftp \
     --enable-exif \
     --enable-calendar \
-    --without-pear \
-    --disable-phar \
     --disable-rpath
 
     make -j ${THREAD} && make install
