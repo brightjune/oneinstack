@@ -744,7 +744,7 @@ if [ ${ARG_NUM} == 0 ]; then
               fi
             done
           fi
-          if [[ ${php_option} =~ ^[5-9]$|^1[0-5]$ ]] || [[ "${PHP_main_ver}" =~ ^7.[0-4]$|^8.[0-5]$ ]]; then
+          if [[ ${php_option} =~ ^[5-9]$|^1[0-4]$ ]] || [[ "${PHP_main_ver}" =~ ^7.[0-4]$|^8.[0-4]$ ]]; then
             while :; do
               echo 'Please select a opcode cache of the PHP:'
               echo -e "\t${CMSG}1${CEND}. Install Zend OPcache"
@@ -790,8 +790,8 @@ if [ ${ARG_NUM} == 0 ]; then
       echo -e "\t${CMSG}14${CEND}. Install mongodb"
       echo -e "\t${CMSG}15${CEND}. Install swoole"
       echo -e "\t${CMSG}16${CEND}. Install xdebug(PHP>=5.5)"
-      read -e -p "Please input numbers:(Default '4 11 12' press Enter) " phpext_option
-      phpext_option=${phpext_option:-'4 11 12'}
+      read -e -p "Please input numbers:(Default '4 7 11 12 14' press Enter) " phpext_option
+      phpext_option=${phpext_option:-'4 7 11 12 14'}
       [ "${phpext_option}" == '0' ] && break
       array_phpext=(${phpext_option})
       array_all=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
@@ -801,7 +801,7 @@ if [ ${ARG_NUM} == 0 ]; then
       done
       if [ "${phpext_flag}" == '1' ]; then
         unset phpext_flag
-        echo; echo "${CWARNING}input error! Please only input number 4 11 12 and so on${CEND}"; echo
+        echo; echo "${CWARNING}input error! Please only input number 4 7 11 12 14 and so on${CEND}"; echo
         continue
       else
         [ -n "`echo ${array_phpext[@]} | grep -w 1`" ] && pecl_zendguardloader=1
