@@ -30,9 +30,13 @@ EOF
     fi
     phpExtensionDir=$(${php_install_dir}/bin/php-config --extension-dir)
     PHP_detail_ver=$(${php_install_dir}/bin/php-config --version)
-    src_url=https://secure.php.net/distributions/php-${PHP_detail_ver}.tar.gz && Download_src
-    tar xzf php-${PHP_detail_ver}.tar.gz
-    pushd php-${PHP_detail_ver}/ext/imap > /dev/null
+    #src_url=https://secure.php.net/distributions/php-${PHP_detail_ver}.tar.gz && Download_src
+    #tar xzf php-${PHP_detail_ver}.tar.gz
+    #pushd php-${PHP_detail_ver}/ext/imap > /dev/null
+    # PHP 8.4+ need
+    src_url=https://pecl.php.net/get/imap-${imap_ver}.tgz && Download_src
+    tar xzf imap-${imap_ver}.tgz
+    pushd imap-${imap_ver} > /dev/null
     ${php_install_dir}/bin/phpize
     ./configure --with-php-config=${php_install_dir}/bin/php-config --with-kerberos --with-imap --with-imap-ssl
     make -j ${THREAD} && make install
